@@ -1,0 +1,54 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 90%;
+    margin: 20px;
+ }
+  
+  .search-full-width {
+    width: 100%;
+}
+
+  section {
+    display: table;
+}
+  
+  .delete-label {
+    display: table-cell;
+    font-size: 14px;
+    margin-left: 8px;
+    min-width: 120px;
+}
+  
+  .delete-button-row {
+    display: table-cell;
+    max-width: 600px;
+}
+  
+  .delete-button-row .mat-mdc-button-base {
+    margin: 8px 8px 8px 0;
+}
+  
+  .delete-flex-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .delete-button-container {
+    display: flex;
+    justify-content: center;
+    width: 120px;
+  }
+

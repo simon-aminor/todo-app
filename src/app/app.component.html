@@ -1,4 +1,30 @@
 <router-outlet />
-<div class="a">
-  <div class="b"></div>
-</div>
+<form class="search-form mb-[-200px]">
+  <div>
+    <div>
+      <mat-form-field class="search-full-width">
+        <mat-label>Search</mat-label>
+        <input matInput #message maxlength="256" />
+      </mat-form-field>
+    </div>
+
+    <div class="flex justify-around items-center">
+      <button class="!bg-green-500" mat-flat-button>Add</button>
+      <button
+        class="bg-red-700"
+        mat-fab
+        aria-label="Example icon button with a delete icon"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <div>
+      <mat-selection-list #shoes>
+        @for (shoe of typesOfShoes; track shoe) {
+        <mat-list-option>{{ shoe }}</mat-list-option>
+        }
+      </mat-selection-list>
+
+    </div>
+  </div>
+</form>
