@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -19,19 +19,19 @@ import { log } from 'console';
 })
 export class AppComponent {
   title = 'todo-app';
-  fetchService = inject(AppService)
-  typesOfShoes = []
+  private appService = inject(AppService)
+  data = signal<any[]>([]);
 
   ngOnInit(): void {
-   const data = this.fetchService.fetch().subscribe({
-    next:(res)=> {
-         console.log(res);
-         
-    },
-    error:(error)=> {
+    this.appService.getPosts().subscribe({
+      next:(res: any)=> {
+        this.data.set(res)
+        
+      },
+      error:(error)=> {
         console.error = error
-    }
-})
+      }
+    })
   
   
    

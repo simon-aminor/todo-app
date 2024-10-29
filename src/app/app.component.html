@@ -1,4 +1,6 @@
 <router-outlet />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia" />
 <form class="search-form mb-[-200px]">
   <div>
     <div>
@@ -20,11 +22,30 @@
     </div>
     <div>
       <mat-selection-list #shoes>
-        @for (shoe of typesOfShoes; track shoe) {
-        <mat-list-option>{{ shoe }}</mat-list-option>
+        @for (item of data(); track item.id) {
+        <mat-list-option
+          class="mb-5 bg-teal-100 rounded-md !h-auto flex justify-between"
+        >
+          <div class="pb-1 mt-2 text-lg">
+            {{ item.title.split(" ").slice(0, 3).join(" ") }}
+          </div>
+          <div class="text-xs text-wrap mb-1">{{ item.body }}</div>
+          <div>
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Example home icon"
+              fontIcon="delete"
+            ></mat-icon>
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Example home icon"
+              fontIcon="edit"
+            ></mat-icon>
+          </div>
+        </mat-list-option>
+
         }
       </mat-selection-list>
-
     </div>
   </div>
 </form>
