@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -21,6 +21,13 @@ export class AppComponent {
   title = 'todo-app';
   private appService = inject(AppService)
   data = signal<any[]>([]);
+
+  Delete(){
+    this.data.set([])
+  }
+  Add(){
+    
+  }
 
   ngOnInit(): void {
     this.appService.getPosts().subscribe({

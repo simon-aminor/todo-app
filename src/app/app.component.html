@@ -11,8 +11,11 @@
     </div>
 
     <div class="flex justify-around items-center">
-      <button class="!bg-green-500" mat-flat-button>Add</button>
+      <button 
+      (click)="Add()"
+      class="!bg-green-500" mat-flat-button>Add</button>
       <button
+      (click)="Delete()"
         class="bg-red-700"
         mat-fab
         aria-label="Example icon button with a delete icon"
@@ -21,29 +24,34 @@
       </button>
     </div>
     <div>
-      <mat-selection-list #shoes>
-        @for (item of data(); track item.id) {
-        <mat-list-option
-          class="mb-5 bg-teal-100 rounded-md !h-auto flex justify-between"
-        >
-          <div class="pb-1 mt-2 text-lg">
-            {{ item.title.split(" ").slice(0, 3).join(" ") }}
+      <mat-selection-list>
+        @if (data().length == 0) {
+          <div class="border-2 flex justify-center items-center py-20 shadow-sm rounded-lg">
+            <p class="">there is not any todos!</p>
           </div>
-          <div class="text-xs text-wrap mb-1">{{ item.body }}</div>
-          <div>
-            <mat-icon
-              aria-hidden="false"
-              aria-label="Example home icon"
-              fontIcon="delete"
-            ></mat-icon>
-            <mat-icon
-              aria-hidden="false"
-              aria-label="Example home icon"
-              fontIcon="edit"
-            ></mat-icon>
-          </div>
-        </mat-list-option>
-
+        } @else {
+          @for (item of data(); track item.id) {
+          <mat-list-option
+            class="mb-5 bg-teal-100 rounded-md !h-auto flex justify-between"
+          >
+            <div class="pb-1 mt-2 text-lg">
+              {{ item.title.split(" ").slice(0, 3).join(" ") }}
+            </div>
+            <div class="text-xs text-wrap mb-1">{{ item.body }}</div>
+            <div>
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Example home icon"
+                fontIcon="delete"
+              ></mat-icon>
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Example home icon"
+                fontIcon="edit"
+              ></mat-icon>
+            </div>
+          </mat-list-option>
+          }
         }
       </mat-selection-list>
     </div>
