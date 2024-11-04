@@ -8,23 +8,10 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import { AppService } from './app.service';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { TodoAddFormComponent } from './components/todo-add-form/todo-add-form.component';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import { log } from 'node:console';
+import {MatDialog} from '@angular/material/dialog';
 
-
-// export interface DialogData {
-//   animal: string;
-//   name: string;
-// }
 
 @Component({
   selector: 'app-root',
@@ -39,20 +26,26 @@ import { log } from 'node:console';
     MatIconModule,
     MatListModule,
     TodoAddFormComponent,
+    MatCheckboxModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class AppComponent {
   title = 'todo-app';
   private appService = inject(AppService)
   data = signal<any[]>([]);
 
   Delete(){
-    console.log(this.data());
-    
     this.data.set([])
+  }
+
+  updateField(){
+this.giveData(this.data.update((state)=> state.filter((todoItem)=>{
+  return
+})))
   }
   
   readonly dialog = inject(MatDialog);
@@ -86,6 +79,9 @@ export class AppComponent {
       }
     })
   
+  }
+  giveData(res:any){
+    return this.data().slice().reverse()
   }
   
 }

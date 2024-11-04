@@ -1,21 +1,22 @@
 <router-outlet />
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia" />
+
 <form class="search-form mb-[-200px]">
   <div>
     <div>
       <mat-form-field class="search-full-width">
         <mat-label>Search</mat-label>
-        <input matInput #message maxlength="256" />
+        <input matInput (keyup)="updateField()" #message maxlength="256" />
       </mat-form-field>
     </div>
 
     <div class="flex justify-around items-center mb-3">
-      <button (click)="openDialog()" class="!bg-green-500" mat-flat-button>
+      <button (click)="openDialog()" class="!bg-green-500 !text-neutral-950" mat-flat-button>
         <mat-icon>add</mat-icon>
         Add
       </button>
-      <button (click)="Delete()" class="bg-red-700" mat-flat-button>
+      <button (click)="Delete()" class="!bg-rose-600 !text-neutral-950" mat-flat-button>
         <mat-icon class="material-icons-outlined">delete</mat-icon>
         Delete
       </button>
@@ -28,7 +29,7 @@
         >
           <p class="">there is not any todos!</p>
         </div>
-        } @else { @for (item of data().slice().reverse(); track item.id) {
+        } @else { @for (item of giveData(); track item.id) {
 
         <div
           class="!bg-rose-100 rounded-md shadow-md !h-auto flex justify-between flex-col p-4"
@@ -42,20 +43,30 @@
               <p class="!text-base !p-0 !m-0">{{ item.body }}</p>
             </div>
 
-            <div>hi</div>
+            <mat-checkbox class="mt-6"></mat-checkbox>
           </div>
 
           <div class="flex justify-end gap-2">
-            <mat-icon
-              aria-hidden="false"
-              aria-label="Example home icon"
-              fontIcon="delete"
-            ></mat-icon>
-            <mat-icon
-              aria-hidden="false"
-              aria-label="Example home icon"
-              fontIcon="edit"
-            ></mat-icon>
+            <button
+            mat-mini-fab
+              class="w-8 h-8 !bg-rose-600 flex justify-center !items-center rounded"
+            >
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Example home icon"
+                fontIcon="delete"
+              ></mat-icon>
+            </button>
+            <button
+            mat-mini-fab
+              class="w-8 h-8 !bg-blue-400 flex justify-center !items-center rounded"
+            >
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Example home icon"
+                fontIcon="edit"
+              ></mat-icon>
+            </button>
           </div>
         </div>
 
