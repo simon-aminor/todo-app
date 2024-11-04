@@ -18,6 +18,7 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
+import { log } from 'node:console';
 
 
 // export interface DialogData {
@@ -49,20 +50,27 @@ export class AppComponent {
   data = signal<any[]>([]);
 
   Delete(){
+    console.log(this.data());
+    
     this.data.set([])
   }
-  Add(){
-   
-  }
+  
   readonly dialog = inject(MatDialog);
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TodoAddFormComponent);
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      
       console.log('The dialog was closed');
       if (result !== undefined) {
-        this.data.set(result);
+        const random = Math.random()
+        result.id =random
+        this.data.update((state)=>[...state,result])
+     
+        
+        
       }
     });
   }
@@ -70,8 +78,7 @@ export class AppComponent {
   ngOnInit(): void {
     this.appService.getPosts().subscribe({
       next:(res: any)=> {
-       // this.data.set(res)
-        console.log(this.data());
+        this.data.set(res)
         
       },
       error:(error)=> {

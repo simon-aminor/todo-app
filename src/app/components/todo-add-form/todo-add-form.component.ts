@@ -37,22 +37,16 @@ export class TodoAddFormComponent {
   readonly dialogRef = inject(MatDialogRef<TodoAddFormComponent>);
   data = signal<any>({});
 
-  constructor(injector: Injector){
-    const a =injector.get(MAT_DIALOG_DATA, null);
+  constructor(){
     this.data.set({title:"" , body:""});
 
-    //this.test.set(this.data()?.title) //safe null detected
-
-
-    console.log(this.data());
-    
   }
   onNoClick(): void {
     this.dialogRef.close();
+    console.log("canceled");
   }
   append(){
-console.log(this.data());
-
+    this.dialogRef.close(this.data());
    }
 }
 

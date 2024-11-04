@@ -10,36 +10,42 @@
       </mat-form-field>
     </div>
 
-    <div class="flex justify-around items-center">
+    <div class="flex justify-around items-center mb-3">
       <button (click)="openDialog()" class="!bg-green-500" mat-flat-button>
+        <mat-icon>add</mat-icon>
         Add
       </button>
-      <button
-        (click)="Delete()"
-        class="bg-red-700"
-        mat-fab
-        aria-label="Example icon button with a delete icon"
-      >
-        <mat-icon>delete</mat-icon>
+      <button (click)="Delete()" class="bg-red-700" mat-flat-button>
+        <mat-icon class="material-icons-outlined">delete</mat-icon>
+        Delete
       </button>
     </div>
     <div>
-      <mat-selection-list>
+      <div class="flex flex-col gap-4">
         @if (data().length == 0) {
         <div
-          class="border-2 flex justify-center items-center py-20 shadow-sm rounded-lg"
+          class="border-2 flex justify-center items-center py-20 shadow-sm rounded"
         >
           <p class="">there is not any todos!</p>
         </div>
-        } @else { @for (item of data(); track item.id) {
-        <mat-list-option
-          class="mb-5 bg-teal-100 rounded-md !h-auto flex justify-between"
+        } @else { @for (item of data().slice().reverse(); track item.id) {
+
+        <div
+          class="!bg-rose-100 rounded-md shadow-md !h-auto flex justify-between flex-col p-4"
         >
-          <div class="pb-1 mt-2 text-lg">
-            {{ item.title.split(" ").slice(0, 3).join(" ") }}
+          <div class="flex gap-2 items-center">
+            <div class="flex flex-col gap-2">
+              <h2 class="!text-base !font-bold !p-0 !m-0 truncate w-80">
+                {{ item.title }}
+              </h2>
+
+              <p class="!text-base !p-0 !m-0">{{ item.body }}</p>
+            </div>
+
+            <div>hi</div>
           </div>
-          <div class="text-xs text-wrap mb-1">{{ item.body }}</div>
-          <div>
+
+          <div class="flex justify-end gap-2">
             <mat-icon
               aria-hidden="false"
               aria-label="Example home icon"
@@ -51,9 +57,10 @@
               fontIcon="edit"
             ></mat-icon>
           </div>
-        </mat-list-option>
+        </div>
+
         } }
-      </mat-selection-list>
+      </div>
     </div>
   </div>
 </form>
