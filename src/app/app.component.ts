@@ -1,28 +1,36 @@
-import { ChangeDetectionStrategy, Component, inject, model, signal} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  model,
+  Signal,
+  signal,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatButtonModule} from '@angular/material/button';
-import {MatListModule} from '@angular/material/list';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
 import { AppService } from './app.service';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TodoAddFormComponent } from './components/todo-add-form/todo-add-form.component';
-import {MatDialog} from '@angular/material/dialog';
-
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [   
-    RouterOutlet, 
-    FormsModule, 
-    MatFormFieldModule, 
+  imports: [
+    RouterOutlet,
+    FormsModule,
+    MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
-    MatDividerModule, 
+    MatButtonModule,
+    MatDividerModule,
     MatIconModule,
     MatListModule,
     TodoAddFormComponent,
@@ -32,56 +40,67 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class AppComponent {
   title = 'todo-app';
-  private appService = inject(AppService)
+  private appService = inject(AppService);
   data = signal<any[]>([]);
+  newData = signal<any[]>([]);
 
-  Delete(){
-    this.data.set([])
+  Delete() {
+    this.data.set([]);
+    this.newData.set(this.data());
   }
 
-  updateField(){
-this.giveData(this.data.update((state)=> state.filter((todoItem)=>{
-  return
-})))
-  }
-  
   readonly dialog = inject(MatDialog);
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TodoAddFormComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
-      
+
       console.log('The dialog was closed');
       if (result !== undefined) {
-        const random = Math.random()
-        result.id =random
-        this.data.update((state)=>[...state,result])
-     
-        
-        
+        const random = Math.random();
+        result.id = random;
+        this.data.update((state) => [...state, result]);
+        this.newData.set(this.data());
+      //  console.log(this.newData());
       }
     });
   }
 
   ngOnInit(): void {
     this.appService.getPosts().subscribe({
-      next:(res: any)=> {
-        this.data.set(res)
-        
+      next: (res: any) => {
+        this.data.set(res);
+        this.newData.set(this.data());
       },
-      error:(error)=> {
-        console.error = error
+      error: (error) => {
+        console.error = error;
+      },
+    });
+  }
+
+  updateField(e: Event) {
+    const a = this.data().filter((data) => {
+      if (data.title.includes(e)) {
+        return data;
+      } else {
+        return;
       }
-    })
-  
+    });
+    this.giveData(a);
   }
-  giveData(res:any){
-    return this.data().slice().reverse()
+
+  giveData(a?: any) {
+    if (a) {
+    //  console.log(a.slice().reverse());
+      const b = a;
+      this.newData.set(b);
+    } else {
+   //   console.log(this.newData.set(this.data()));
+      this.newData.set(this.data());
+    }
   }
-  
 }

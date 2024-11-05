@@ -7,29 +7,42 @@
     <div>
       <mat-form-field class="search-full-width">
         <mat-label>Search</mat-label>
-        <input matInput (keyup)="updateField()" #message maxlength="256" />
+        <input
+          matInput
+          (keyup)="updateField($any($event.target).value)"
+          #message
+          maxlength="256"
+        />
       </mat-form-field>
     </div>
 
     <div class="flex justify-around items-center mb-3">
-      <button (click)="openDialog()" class="!bg-green-500 !text-neutral-950" mat-flat-button>
+      <button
+        (click)="openDialog()"
+        class="!bg-green-500 !text-neutral-950"
+        mat-flat-button
+      >
         <mat-icon>add</mat-icon>
         Add
       </button>
-      <button (click)="Delete()" class="!bg-rose-600 !text-neutral-950" mat-flat-button>
+      <button
+        (click)="Delete()"
+        class="!bg-rose-600 !text-neutral-950"
+        mat-flat-button
+      >
         <mat-icon class="material-icons-outlined">delete</mat-icon>
         Delete
       </button>
     </div>
     <div>
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 pb-8">
         @if (data().length == 0) {
         <div
           class="border-2 flex justify-center items-center py-20 shadow-sm rounded"
         >
           <p class="">there is not any todos!</p>
         </div>
-        } @else { @for (item of giveData(); track item.id) {
+        } @else { @for (item of newData().slice().reverse(); track $index) {
 
         <div
           class="!bg-rose-100 rounded-md shadow-md !h-auto flex justify-between flex-col p-4"
@@ -48,7 +61,7 @@
 
           <div class="flex justify-end gap-2">
             <button
-            mat-mini-fab
+              mat-mini-fab
               class="w-8 h-8 !bg-rose-600 flex justify-center !items-center rounded"
             >
               <mat-icon
@@ -58,7 +71,7 @@
               ></mat-icon>
             </button>
             <button
-            mat-mini-fab
+              mat-mini-fab
               class="w-8 h-8 !bg-blue-400 flex justify-center !items-center rounded"
             >
               <mat-icon
