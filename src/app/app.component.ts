@@ -20,6 +20,7 @@ import { AppService } from './app.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TodoAddFormComponent } from './components/todo-add-form/todo-add-form.component';
 import { MatDialog } from '@angular/material/dialog';
+import { log } from 'console';
 
 @Component({
   selector: 'app-root',
@@ -46,28 +47,35 @@ export class AppComponent {
   data = signal<any[]>([]);
   newData = signal<any[]>([]);
 
+  readonly dialog = inject(MatDialog);
+
   Delete() {
     this.data.set([]);
     this.newData.set(this.data());
   }
 
-  readonly dialog = inject(MatDialog);
-
-  openDialog(): void {
+  openDialog(id: any): void {
     const dialogRef = this.dialog.open(TodoAddFormComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
-
       console.log('The dialog was closed');
-      if (result !== undefined) {
-        const random = Math.random();
-        result.id = random;
-        this.data.update((state) => [...state, result]);
-        this.newData.set(this.data());
-      //  console.log(this.newData());
+
+      if (id) {
+        this.editItem(id, result);
+      } else {
+        this.add(result);
       }
     });
+  }
+
+  add(result: any) {
+    if (result !== undefined) {
+      const random = Math.random();
+      result.id = random;
+      this.data.update((state) => [...state, result]);
+      this.newData.set(this.data());
+    }
   }
 
   ngOnInit(): void {
@@ -95,12 +103,32 @@ export class AppComponent {
 
   giveData(a?: any) {
     if (a) {
-    //  console.log(a.slice().reverse());
+      //  console.log(a.slice().reverse());
       const b = a;
       this.newData.set(b);
     } else {
-   //   console.log(this.newData.set(this.data()));
+      //   console.log(this.newData.set(this.data()));
       this.newData.set(this.data());
     }
+  }
+
+  deleteItem(id: any) {
+    this.newData().filter((state) => {
+      if (state.id == id) {
+        const index = this.newData().indexOf(state);
+        this.newData().splice(index, 1);
+        this.data.set(this.newData());
+      }
+      return;
+    });
+  }
+
+  editItem(id: any, result: any) {
+    this.newData().filter((state) => {
+      if (state.id == id) {
+        const index = this.newData().indexOf(state);
+        this.newData()[index];
+      }
+    });
   }
 }

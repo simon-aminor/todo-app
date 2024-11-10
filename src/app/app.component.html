@@ -18,7 +18,7 @@
 
     <div class="flex justify-around items-center mb-3">
       <button
-        (click)="openDialog()"
+        (click)="openDialog(null)"
         class="!bg-green-500 !text-neutral-950"
         mat-flat-button
       >
@@ -61,6 +61,7 @@
 
           <div class="flex justify-end gap-2">
             <button
+            (click)="deleteItem(item.id)"
               mat-mini-fab
               class="w-8 h-8 !bg-rose-600 flex justify-center !items-center rounded"
             >
@@ -71,6 +72,7 @@
               ></mat-icon>
             </button>
             <button
+            (click)="openDialog(item.id)"
               mat-mini-fab
               class="w-8 h-8 !bg-blue-400 flex justify-center !items-center rounded"
             >
