@@ -54,15 +54,30 @@ export class AppComponent {
     this.newData.set(this.data());
   }
 
-  openDialog(id: any): void {
-    const dialogRef = this.dialog.open(TodoAddFormComponent);
+  openDialog(item: any): void {
+    const dialogRef = this.dialog.open(TodoAddFormComponent, { data: item });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
+      console.log('result', result);
+      if (Object.keys(result).length) {
+        this.data.update(
+          (prev: any) =>
+            prev.map((x: any) =>
+              x.id === result.id
+                ? { ...x, title: result.title, body: result.body }
+                : x
+            )
+        );
+        this.newData.set(this.data());
+      } else {
+        alert('you should fill at least title or body');
+        return;
+      }
+
       console.log('The dialog was closed');
 
-      if (id) {
-        this.editItem(id, result);
+      if (item) {
+        this.editItem(item, result);
       } else {
         this.add(result);
       }
@@ -123,9 +138,11 @@ export class AppComponent {
     });
   }
 
-  editItem(id: any, result: any) {
+  editItem(item: any, result: any) {
+    console.log(result);
+
     this.newData().filter((state) => {
-      if (state.id == id) {
+      if (state.id == item.id) {
         const index = this.newData().indexOf(state);
         this.newData()[index];
       }
