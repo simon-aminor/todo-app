@@ -6,12 +6,12 @@
 
 html,
 body {
-  height: 100%;
+  @apply bg-neutral-100 h-full container m-auto;
 }
 
 body {
-  margin: 0;
-  font-family: "Itim", cursive !important;
-  font-weight: 400 !important;
-  font-style: normal !important;
+  // margin: 0;
+  // font-family: "Itim", cursive !important;
+  // font-weight: 400 !important;
+  // font-style: normal !important;
 }

@@ -19,7 +19,7 @@
     <div class="flex justify-around items-center mb-3">
       <button
         (click)="openDialog(null)"
-        class="!bg-green-500 !text-neutral-950"
+        class="!bg-green-500 !text-white"
         mat-flat-button
       >
         <mat-icon>add</mat-icon>
@@ -27,11 +27,19 @@
       </button>
       <button
         (click)="Delete()"
-        class="!bg-rose-600 !text-neutral-950"
+        class="!bg-red-500 !text-white"
         mat-flat-button
       >
         <mat-icon class="material-icons-outlined">delete</mat-icon>
         Delete
+      </button>
+      <button
+        (click)="selectAll()"
+        class="!bg-blue-400 !text-neutral-950"
+        mat-flat-button
+      >
+        <mat-icon class="material-icons-outlined">delete</mat-icon>
+        Select All
       </button>
     </div>
     <div>
@@ -45,7 +53,7 @@
         } @else { @for (item of newData().slice().reverse(); track $index) {
 
         <div
-          class="!bg-rose-100 rounded-md shadow-md !h-auto flex justify-between flex-col p-4"
+          class="bg-white border rounded !h-auto flex justify-between flex-col p-4"
         >
           <div class="flex gap-2 items-center">
             <div class="flex flex-col gap-2">
@@ -56,7 +64,11 @@
               <p class="!text-base !p-0 !m-0">{{ item.body }}</p>
             </div>
 
-            <mat-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="item.checked" class="mt-6"></mat-checkbox>
+            <mat-checkbox
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="item.checked"
+              class="mt-6"
+            ></mat-checkbox>
           </div>
 
           <div class="flex justify-end gap-2">

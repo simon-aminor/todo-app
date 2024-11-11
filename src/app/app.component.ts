@@ -67,8 +67,8 @@ export class AppComponent {
           )
         );
         this.newData.set(this.data());
+        this.updateField;
       } else {
-        alert('you should fill at least title or body');
         return;
       }
 
@@ -151,5 +151,10 @@ export class AppComponent {
         console.error = error;
       },
     });
+  }
+
+  selectAll() {
+    this.data.update((prev: any) => prev.map((x: any) => ({...x, checked: true})));
+    this.newData.set(this.data());
   }
 }
