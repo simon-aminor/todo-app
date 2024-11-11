@@ -42,7 +42,6 @@ export class TodoAddFormComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) item: any) {
     if (item) {
- 
       this.data.set(item);
     }
   }

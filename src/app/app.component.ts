@@ -60,13 +60,12 @@ export class AppComponent {
     dialogRef.afterClosed().subscribe((result) => {
       console.log('result', result);
       if (Object.keys(result).length) {
-        this.data.update(
-          (prev: any) =>
-            prev.map((x: any) =>
-              x.id === result.id
-                ? { ...x, title: result.title, body: result.body }
-                : x
-            )
+        this.data.update((prev: any) =>
+          prev.map((x: any) =>
+            x.id === result.id
+              ? { ...x, title: result.title, body: result.body }
+              : x
+          )
         );
         this.newData.set(this.data());
       } else {
