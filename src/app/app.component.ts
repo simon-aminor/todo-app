@@ -46,19 +46,18 @@ export class AppComponent {
   private appService = inject(AppService);
   data = signal<any[]>([]);
   newData = signal<any[]>([]);
+  event !: Event  // ! => doesn't have first value
 
   readonly dialog = inject(MatDialog);
 
-  Delete() {
-    this.data.update((prev) => prev.filter((e) => !e.checked));
-    this.newData.set(this.data());
+  ngOnInit(): void {
+    this.fetchData();  //fetch data at first render
   }
-
   openDialog(item: any): void {
     const dialogRef = this.dialog.open(TodoAddFormComponent, { data: item });
-
+      // open and after close dialog 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
+      if (result) { // when somthing writen in add dialog this scope addes
         this.data.update((prev: any) =>
           prev.map((x: any) =>
             x.id === result.id
@@ -66,22 +65,22 @@ export class AppComponent {
               : x
           )
         );
+        
         this.newData.set(this.data());
-        this.updateField;
+        
       } else {
         return;
       }
-
       console.log('The dialog was closed');
-
       if (item) {
         this.editItem(item, result);
+        this.updateField(this.event);
       } else {
         this.add(result);
+        this.updateField(this.event);
       }
     });
   }
-
   add(result: any) {
     if (result !== undefined) {
       const random = Math.random();
@@ -91,33 +90,10 @@ export class AppComponent {
       this.newData.set(this.data());
     }
   }
-
-  ngOnInit(): void {
-    this.getData();
+  Delete() {
+    this.data.update((prev) => prev.filter((e) => !e.checked));
+    this.newData.set(this.data());
   }
-
-  updateField(e: Event) {
-    const a = this.data().filter((data) => {
-      if (data.title.includes(e)) {
-        return data;
-      } else {
-        return;
-      }
-    });
-    this.giveData(a);
-  }
-
-  giveData(a?: any) {
-    if (a) {
-      //  console.log(a.slice().reverse());
-      const b = a;
-      this.newData.set(b);
-    } else {
-      //   console.log(this.newData.set(this.data()));
-      this.newData.set(this.data());
-    }
-  }
-
   deleteItem(id: any) {
     this.newData().filter((state) => {
       if (state.id == id) {
@@ -128,7 +104,6 @@ export class AppComponent {
       return;
     });
   }
-
   editItem(item: any, result: any) {
     console.log(result);
 
@@ -139,8 +114,26 @@ export class AppComponent {
       }
     });
   }
-
-  getData() {
+  updateField(e: Event) {
+     this.event = e
+    const a = this.data().filter((data) => {
+      if (data.title.includes(e)) {
+        return data;
+      } else {
+        return;
+      }
+    });
+    this.freshData(a);
+  }
+  freshData(a?: any) {
+    if (a) {
+      const b = a;
+      this.newData.set(b);
+    } else {
+      this.newData.set(this.data());
+    }
+  }
+  fetchData() {
     this.appService.getPosts().subscribe({
       next: async (res: any) => {
         await res?.forEach((el: any) => (el.checked = false));
@@ -152,12 +145,11 @@ export class AppComponent {
       },
     });
   }
-
   selectAll() {
     this.data.update((prev: any) =>
       prev.map((x: any) => ({ ...x, checked: true }))
     );
     this.newData.set(this.data());
-    this.Delete();
+    //this.Delete();
   }
 }

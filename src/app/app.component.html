@@ -1,9 +1,10 @@
 <router-outlet />
-
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia" />
 
 <form class="search-form mb-[-200px]">
   <div>
+
+    // search box and buttons
     <div class="fixed top-0 left-0 right-0 w-full z-10 bg-white">
       <div>
         <mat-form-field class="search-full-width pl-6 pr-6 mt-4">
@@ -43,6 +44,8 @@
         </button>
       </div>
     </div>
+
+    // list of todos
     <div class="mt-36">
       <div class="flex flex-col gap-4 pb-8">
         @if (data().length == 0) {
