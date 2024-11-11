@@ -56,7 +56,7 @@
               <p class="!text-base !p-0 !m-0">{{ item.body }}</p>
             </div>
 
-            <mat-checkbox class="mt-6"></mat-checkbox>
+            <mat-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="item.checked" class="mt-6"></mat-checkbox>
           </div>
 
           <div class="flex justify-end gap-2">

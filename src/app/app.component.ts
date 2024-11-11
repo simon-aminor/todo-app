@@ -50,7 +50,7 @@ export class AppComponent {
   readonly dialog = inject(MatDialog);
 
   Delete() {
-    this.data.set([]);
+    this.data.update((prev) => prev.filter((e) => !e.checked));
     this.newData.set(this.data());
   }
 
@@ -58,8 +58,7 @@ export class AppComponent {
     const dialogRef = this.dialog.open(TodoAddFormComponent, { data: item });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('result', result);
-      if (Object.keys(result).length) {
+      if (result) {
         this.data.update((prev: any) =>
           prev.map((x: any) =>
             x.id === result.id
@@ -87,21 +86,14 @@ export class AppComponent {
     if (result !== undefined) {
       const random = Math.random();
       result.id = random;
-      this.data.update((state) => [...state, result]);
+      result.checked = false;
+      this.data.update((state: any) => [...state, result]);
       this.newData.set(this.data());
     }
   }
 
   ngOnInit(): void {
-    this.appService.getPosts().subscribe({
-      next: (res: any) => {
-        this.data.set(res);
-        this.newData.set(this.data());
-      },
-      error: (error) => {
-        console.error = error;
-      },
-    });
+    this.getData();
   }
 
   updateField(e: Event) {
@@ -145,6 +137,19 @@ export class AppComponent {
         const index = this.newData().indexOf(state);
         this.newData()[index];
       }
+    });
+  }
+
+  getData() {
+    this.appService.getPosts().subscribe({
+      next: async (res: any) => {
+        await res?.forEach((el: any) => (el.checked = false));
+        this.data.set(res);
+        this.newData.set(this.data());
+      },
+      error: (error) => {
+        console.error = error;
+      },
     });
   }
 }
