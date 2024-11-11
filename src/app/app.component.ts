@@ -154,7 +154,10 @@ export class AppComponent {
   }
 
   selectAll() {
-    this.data.update((prev: any) => prev.map((x: any) => ({...x, checked: true})));
+    this.data.update((prev: any) =>
+      prev.map((x: any) => ({ ...x, checked: true }))
+    );
     this.newData.set(this.data());
+    this.Delete();
   }
 }

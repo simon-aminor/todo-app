@@ -4,45 +4,46 @@
 
 <form class="search-form mb-[-200px]">
   <div>
-    <div>
-      <mat-form-field class="search-full-width">
-        <mat-label>Search</mat-label>
-        <input
-          matInput
-          (keyup)="updateField($any($event.target).value)"
-          #message
-          maxlength="256"
-        />
-      </mat-form-field>
+    <div class="fixed top-0 left-0 right-0 w-full z-10 bg-white">
+      <div>
+        <mat-form-field class="search-full-width pl-6 pr-6 mt-4">
+          <mat-label>Search</mat-label>
+          <input
+            matInput
+            (keyup)="updateField($any($event.target).value)"
+            #message
+            maxlength="256"
+          />
+        </mat-form-field>
+      </div>
+      <div class="flex justify-around items-center mb-3">
+        <button
+          (click)="openDialog(null)"
+          class="!bg-green-500 !text-white"
+          mat-flat-button
+        >
+          <mat-icon>add</mat-icon>
+          Add
+        </button>
+        <button
+          (click)="Delete()"
+          class="!bg-red-500 !text-white"
+          mat-flat-button
+        >
+          <mat-icon class="material-icons-outlined">delete</mat-icon>
+          Done
+        </button>
+        <button
+          (click)="selectAll()"
+          class="!bg-blue-400 !text-white"
+          mat-flat-button
+        >
+          <mat-icon class="material-icons-outlined">delete</mat-icon>
+          All
+        </button>
+      </div>
     </div>
-
-    <div class="flex justify-around items-center mb-3">
-      <button
-        (click)="openDialog(null)"
-        class="!bg-green-500 !text-white"
-        mat-flat-button
-      >
-        <mat-icon>add</mat-icon>
-        Add
-      </button>
-      <button
-        (click)="Delete()"
-        class="!bg-red-500 !text-white"
-        mat-flat-button
-      >
-        <mat-icon class="material-icons-outlined">delete</mat-icon>
-        Delete
-      </button>
-      <button
-        (click)="selectAll()"
-        class="!bg-blue-400 !text-neutral-950"
-        mat-flat-button
-      >
-        <mat-icon class="material-icons-outlined">delete</mat-icon>
-        Select All
-      </button>
-    </div>
-    <div>
+    <div class="mt-36">
       <div class="flex flex-col gap-4 pb-8">
         @if (data().length == 0) {
         <div
@@ -75,7 +76,7 @@
             <button
               (click)="deleteItem(item.id)"
               mat-mini-fab
-              class="w-8 h-8 !bg-rose-600 flex justify-center !items-center rounded"
+              class="w-8 h-8 !bg-red-500 flex justify-center !items-center rounded"
             >
               <mat-icon
                 aria-hidden="false"
@@ -86,7 +87,7 @@
             <button
               (click)="openDialog(item)"
               mat-mini-fab
-              class="w-8 h-8 !bg-blue-400 flex justify-center !items-center rounded"
+              class="w-8 h-8 !bg-lime-600 flex justify-center !items-center rounded"
             >
               <mat-icon
                 aria-hidden="false"
@@ -102,4 +103,4 @@
     </div>
   </div>
 </form>
-<!-- <app-todo-add-form/> -->
+
