@@ -21,6 +21,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TodoAddFormComponent } from './components/todo-add-form/todo-add-form.component';
 import { MatDialog } from '@angular/material/dialog';
 import { log } from 'console';
+import { Todo } from './types/todo';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -42,42 +44,42 @@ import { log } from 'console';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = 'todo-app';
-  private appService = inject(AppService);
-  data = signal<any[]>([]);
-  newData = signal<any[]>([]);
-  event !: Event  // ! => doesn't have first value
+  todos = signal<Todo[]>([]);
+  filtredTodos = signal<Todo[]>([]);
 
+  isChecked = signal<boolean>(false);
+  searchedText = signal('');
   readonly dialog = inject(MatDialog);
 
+  private appService = inject(AppService);
   ngOnInit(): void {
-    this.fetchData();  //fetch data at first render
+    this.fetchData(); //fetch data at first render
   }
   openDialog(item: any): void {
     const dialogRef = this.dialog.open(TodoAddFormComponent, { data: item });
-      // open and after close dialog 
+    // open and after close dialog
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) { // when somthing writen in add dialog this scope addes
-        this.data.update((prev: any) =>
+      if (result) {
+        // when somthing writen in add dialog this scope addes
+        this.todos.update((prev: any) =>
           prev.map((x: any) =>
             x.id === result.id
               ? { ...x, title: result.title, body: result.body }
               : x
           )
         );
-        
-        this.newData.set(this.data());
-        
+
+        this.filtredTodos.set(this.todos());
       } else {
         return;
       }
       console.log('The dialog was closed');
       if (item) {
         this.editItem(item, result);
-        this.updateField(this.event);
+        this.updateField(this.searchedText());
       } else {
         this.add(result);
-        this.updateField(this.event);
+        this.updateField(this.searchedText());
       }
     });
   }
@@ -86,20 +88,20 @@ export class AppComponent {
       const random = Math.random();
       result.id = random;
       result.checked = false;
-      this.data.update((state: any) => [...state, result]);
-      this.newData.set(this.data());
+      this.todos.update((state: any) => [...state, result]);
+      this.filtredTodos.set(this.todos());
     }
   }
   Delete() {
-    this.data.update((prev) => prev.filter((e) => !e.checked));
-    this.newData.set(this.data());
+    this.todos.update((prev) => prev.filter((e) => !e.checked));
+    this.filtredTodos.set(this.todos());
   }
   deleteItem(id: any) {
-    this.newData().filter((state) => {
+    this.filtredTodos().filter((state) => {
       if (state.id == id) {
-        const index = this.newData().indexOf(state);
-        this.newData().splice(index, 1);
-        this.data.set(this.newData());
+        const index = this.filtredTodos().indexOf(state);
+        this.filtredTodos().splice(index, 1);
+        this.todos.set(this.filtredTodos());
       }
       return;
     });
@@ -107,17 +109,17 @@ export class AppComponent {
   editItem(item: any, result: any) {
     console.log(result);
 
-    this.newData().filter((state) => {
+    this.filtredTodos().filter((state) => {
       if (state.id == item.id) {
-        const index = this.newData().indexOf(state);
-        this.newData()[index];
+        const index = this.filtredTodos().indexOf(state);
+        this.filtredTodos()[index];
       }
     });
   }
-  updateField(e: Event) {
-     this.event = e
-    const a = this.data().filter((data) => {
-      if (data.title.includes(e)) {
+  updateField(text: string) {
+    this.searchedText.set(text);
+    const a = this.todos().filter((data) => {
+      if (data.title.includes(text)) {
         return data;
       } else {
         return;
@@ -128,17 +130,17 @@ export class AppComponent {
   freshData(a?: any) {
     if (a) {
       const b = a;
-      this.newData.set(b);
+      this.filtredTodos.set(b);
     } else {
-      this.newData.set(this.data());
+      this.filtredTodos.set(this.todos());
     }
   }
   fetchData() {
     this.appService.getPosts().subscribe({
       next: async (res: any) => {
         await res?.forEach((el: any) => (el.checked = false));
-        this.data.set(res);
-        this.newData.set(this.data());
+        this.todos.set(res);
+        this.filtredTodos.set(this.todos());
       },
       error: (error) => {
         console.error = error;
@@ -146,10 +148,14 @@ export class AppComponent {
     });
   }
   selectAll() {
-    this.data.update((prev: any) =>
+    this.todos.update((prev: any) =>
       prev.map((x: any) => ({ ...x, checked: true }))
     );
-    this.newData.set(this.data());
-    //this.Delete();
+
+    this.filtredTodos.set(this.todos());
+  }
+
+  handleCheckBoxChange(item: any) {
+    this.isChecked.set(Boolean(this.todos().filter((c) => c.checked).length));
   }
 }

@@ -1,13 +1,13 @@
 <router-outlet />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia" />
-
-<form class="search-form mb-[-200px]">
-  <div>
-
-    // search box and buttons
-    <div class="fixed top-0 left-0 right-0 w-full z-10 bg-white">
-      <div>
-        <mat-form-field class="search-full-width pl-6 pr-6 mt-4">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<form class="search-form w-5/6 m-auto">
+  <div class="flex flex-col items-center justify-center">
+    <!-- search box and buttons -->
+    <div
+      class="fixed top-0 left-0 right-0 z-10 bg-white w-5/6 m-auto lg:flex lg:flex-row lg:justify-between lg:items-baseline lg:w-10/12 "
+    >
+      <div class="w-10/12 inline-block lg:w-1/4 ml-9">
+        <mat-form-field class="mt-4 w-full">
           <mat-label>Search</mat-label>
           <input
             matInput
@@ -17,7 +17,7 @@
           />
         </mat-form-field>
       </div>
-      <div class="flex justify-around items-center mb-3">
+      <div class="flex justify-between px-6 items-center mb-6 lg:gap-28">
         <button
           (click)="openDialog(null)"
           class="!bg-green-500 !text-white"
@@ -32,78 +32,82 @@
           mat-flat-button
         >
           <mat-icon class="material-icons-outlined">delete</mat-icon>
-          Done
+          Delete
         </button>
         <button
           (click)="selectAll()"
           class="!bg-blue-400 !text-white"
+          [style.visibility]="isChecked() ? 'visible' : 'hidden'"
           mat-flat-button
         >
-          <mat-icon class="material-icons-outlined">delete</mat-icon>
-          All
+          Select All
         </button>
       </div>
     </div>
 
-    // list of todos
-    <div class="mt-36">
+    <!-- list of todos -->
+    <div class="mt-40 flex justify-center items-center lg:mt-24">
       <div class="flex flex-col gap-4 pb-8">
-        @if (data().length == 0) {
+        @if (todos().length == 0) {
         <div
           class="border-2 flex justify-center items-center py-20 shadow-sm rounded"
         >
           <p class="">there is not any todos!</p>
         </div>
-        } @else { @for (item of newData().slice().reverse(); track $index) {
+        } @else{
+        <div class="flex flex-row gap-3 flex-wrap">
+          @for (item of filtredTodos().slice().reverse(); track $index) {
 
-        <div
-          class="bg-white border rounded !h-auto flex justify-between flex-col p-4"
-        >
-          <div class="flex gap-2 items-center">
-            <div class="flex flex-col gap-2">
-              <h2 class="!text-base !font-bold !p-0 !m-0 truncate w-80">
-                {{ item.title }}
-              </h2>
+          <div
+            class="flex flex-col justify-between w-full bg-white border rounded !h-auto p-4"
+          >
+            <div class="flex justify-between gap-2 items-space">
+              <div class="flex flex-col gap-2">
+                <h2 class="!text-base !font-bold !p-0 !m-0 truncate w-80">
+                  {{ item.title }}
+                </h2>
 
-              <p class="!text-base !p-0 !m-0">{{ item.body }}</p>
+                <p class="!text-base !p-0 !m-0">{{ item.body }}</p>
+                <!-- check box  -->
+              </div>
+              <mat-checkbox
+                class="mr-4"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="item.checked"
+                (ngModelChange)="handleCheckBoxChange(item)"
+              ></mat-checkbox>
             </div>
 
-            <mat-checkbox
-              [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="item.checked"
-              class="mt-6"
-            ></mat-checkbox>
+            <div class="flex justify-end gap-2">
+              <button
+                (click)="deleteItem(item.id)"
+                mat-mini-fab
+                class="w-8 h-8 !bg-red-500 !text-white flex justify-center !items-center rounded"
+              >
+                <mat-icon
+                  aria-hidden="false"
+                  aria-label="Example home icon"
+                  fontIcon="delete"
+                ></mat-icon>
+              </button>
+              <button
+                (click)="openDialog(item)"
+                mat-mini-fab
+                class="w-8 h-8 !bg-lime-600 !text-white flex justify-center !items-center rounded"
+              >
+                <mat-icon
+                  aria-hidden="false"
+                  aria-label="Example home icon"
+                  fontIcon="edit"
+                ></mat-icon>
+              </button>
+            </div>
           </div>
 
-          <div class="flex justify-end gap-2">
-            <button
-              (click)="deleteItem(item.id)"
-              mat-mini-fab
-              class="w-8 h-8 !bg-red-500 flex justify-center !items-center rounded"
-            >
-              <mat-icon
-                aria-hidden="false"
-                aria-label="Example home icon"
-                fontIcon="delete"
-              ></mat-icon>
-            </button>
-            <button
-              (click)="openDialog(item)"
-              mat-mini-fab
-              class="w-8 h-8 !bg-lime-600 flex justify-center !items-center rounded"
-            >
-              <mat-icon
-                aria-hidden="false"
-                aria-label="Example home icon"
-                fontIcon="edit"
-              ></mat-icon>
-            </button>
-          </div>
+          }
         </div>
-
-        } }
+        }
       </div>
     </div>
   </div>
 </form>
-
