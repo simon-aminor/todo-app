@@ -1,15 +1,19 @@
-<mat-dialog-content>
+<mat-dialog-content class="flex flex-col lg:w-96">
   <p>append your new todo ;)</p>
-  <mat-form-field>
-    <mat-label>Todo Title</mat-label>
+  <div>
+    <mat-form-field>
+      <mat-label>Todo Title</mat-label>
 
-    <input matInput [(ngModel)]="data().title" />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Todo Body</mat-label>
+      <input matInput [(ngModel)]="data().title" />
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>Todo Body</mat-label>
 
-    <input class="!w-20" matInput [(ngModel)]="data().body" />
-  </mat-form-field>
+      <input matInput [(ngModel)]="data().body" />
+    </mat-form-field>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>

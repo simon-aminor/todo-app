@@ -23,6 +23,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { log } from 'console';
 import { Todo } from './types/todo';
 import { NgStyle } from '@angular/common';
+import { DeleteWarningPopupComponent } from './components/delete-warning-popup/delete-warning-popup.component';
 
 @Component({
   selector: 'app-root',
@@ -46,6 +47,7 @@ import { NgStyle } from '@angular/common';
 export class AppComponent {
   todos = signal<Todo[]>([]);
   filtredTodos = signal<Todo[]>([]);
+  deleteConfrimation = signal<boolean>(false);
 
   isChecked = signal<boolean>(false);
   searchedText = signal('');
@@ -92,9 +94,23 @@ export class AppComponent {
       this.filtredTodos.set(this.todos());
     }
   }
-  Delete() {
-    this.todos.update((prev) => prev.filter((e) => !e.checked));
-    this.filtredTodos.set(this.todos());
+
+  async Delete() {
+    await this.openWarningDialog().then(() => {
+      if (this.deleteConfrimation()) {
+        console.log("deleted");
+        
+        this.todos.update((prev) => prev.filter((e) => !e.checked));
+        this.filtredTodos.set(this.todos());
+      } 
+    });
+  } 
+   async openWarningDialog() {
+    const dialogRef = this.dialog.open(DeleteWarningPopupComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.deleteConfrimation.set(result);
+    });
   }
   deleteItem(id: any) {
     this.filtredTodos().filter((state) => {
