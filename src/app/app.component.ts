@@ -94,33 +94,38 @@ export class AppComponent {
       this.filtredTodos.set(this.todos());
     }
   }
-
-  async Delete() {
-    await this.openWarningDialog().then(() => {
-      if (this.deleteConfrimation()) {
-        console.log("deleted");
-        
-        this.todos.update((prev) => prev.filter((e) => !e.checked));
-        this.filtredTodos.set(this.todos());
-      } 
-    });
-  } 
-   async openWarningDialog() {
+  async openWarningDialog() {
     const dialogRef = this.dialog.open(DeleteWarningPopupComponent);
 
-    dialogRef.afterClosed().subscribe((result) => {
-      this.deleteConfrimation.set(result);
+    return new Promise((resolve) => {
+      dialogRef.afterClosed().subscribe((result) => {
+        this.deleteConfrimation.set(false);
+        if (result) {
+          this.deleteConfrimation.set(true);
+          resolve(true);
+        } else {
+          this.deleteConfrimation.set(false);
+          resolve(false);
+        }
+      });
     });
   }
-  deleteItem(id: any) {
-    this.filtredTodos().filter((state) => {
-      if (state.id == id) {
-        const index = this.filtredTodos().indexOf(state);
-        this.filtredTodos().splice(index, 1);
-        this.todos.set(this.filtredTodos());
-      }
+  async deleteAll() {
+    await this.openWarningDialog();
+    if (this.deleteConfrimation()) {
+      console.log('deleted');
+      this.todos.update((prev) => prev.filter((e) => !e.checked));
+      this.filtredTodos.set(this.todos());
+    } else {
       return;
-    });
+    }
+  }
+  async deleteItem(id: any) {
+    await this.openWarningDialog();
+    if (this.deleteConfrimation()) {
+      this.todos.update((prev) => prev.filter((e) => e.id !== id));
+      this.filtredTodos.set(this.todos());
+    }
   }
   editItem(item: any, result: any) {
     console.log(result);
