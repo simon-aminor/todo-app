@@ -3,11 +3,15 @@ import {
   Component,
   computed,
   effect,
+  ElementRef,
   inject,
   model,
   Signal,
   signal,
+  ViewChild,
+  viewChild,
 } from '@angular/core';
+import { EmptyBoxComponent } from './components/empty-box/empty-box.component';
 import { RouterOutlet } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,6 +43,7 @@ import { DeleteWarningPopupComponent } from './components/delete-warning-popup/d
     MatListModule,
     TodoAddFormComponent,
     MatCheckboxModule,
+    EmptyBoxComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -48,15 +53,27 @@ export class AppComponent {
   todos = signal<Todo[]>([]);
   filtredTodos = signal<Todo[]>([]);
   deleteConfrimation = signal<boolean>(false);
-
   isChecked = signal<boolean>(false);
   searchedText = signal('');
+  // @ViewChild('selectAllButton') selectAllButton!: ElementRef;
   readonly dialog = inject(MatDialog);
 
   private appService = inject(AppService);
   ngOnInit(): void {
     this.fetchData(); //fetch data at first render
   }
+  ngDoCheck(): void {
+    this.updateField(this.searchedText());
+    this.handleCheckBoxChange();
+    // console.log(this.selectAllButton);
+
+    // if (this.isChecked()) {
+    //   this.selectAllButton.nativeElement.style.visibility = 'hidden';
+    // } else {
+    //   this.selectAllButton.nativeElement.style.visibility = 'visible';
+    // }
+  }
+
   openDialog(item: any): void {
     const dialogRef = this.dialog.open(TodoAddFormComponent, { data: item });
     // open and after close dialog
@@ -78,10 +95,8 @@ export class AppComponent {
       console.log('The dialog was closed');
       if (item) {
         this.editItem(item, result);
-        this.updateField(this.searchedText());
       } else {
         this.add(result);
-        this.updateField(this.searchedText());
       }
     });
   }
@@ -146,6 +161,7 @@ export class AppComponent {
         return;
       }
     });
+
     this.freshData(a);
   }
   freshData(a?: any) {
@@ -176,7 +192,7 @@ export class AppComponent {
     this.filtredTodos.set(this.todos());
   }
 
-  handleCheckBoxChange(item: any) {
+  handleCheckBoxChange(item?: any) {
     this.isChecked.set(Boolean(this.todos().filter((c) => c.checked).length));
   }
 }
