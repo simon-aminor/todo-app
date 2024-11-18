@@ -62,13 +62,14 @@ export class AppComponent {
     // open and after close dialog
     dialogRef.afterClosed().subscribe((result) => {
       // choose to edit or add result
-      if (item && result) {
+      if (item) {
         this.editItem(result);
       } else if (result) {
         this.add(result);
       }
     });
   }
+
   add(result: any) {
     // add new todo with dialog results
     if (result.title && result.body) {
@@ -79,6 +80,7 @@ export class AppComponent {
       this.filtredTodos.set(this.todos());
     }
   }
+
   async openWarningDialog() {
     // open confrimation dialog
     const dialogRef = this.dialog.open(DeleteWarningPopupComponent);
@@ -117,16 +119,16 @@ export class AppComponent {
   }
   editItem(result: any) {
     // edit selected todo with changes writen in dialog
-
-    this.todos.update((prev: any) =>
-      prev.map((x: any) =>
-        x.id === result.id
-          ? { ...x, title: result.title, body: result.body }
-          : x
-      )
-    );
-
-    this.filtredTodos.set(this.todos());
+    if (result.title && result.body) {
+      this.todos.update((prev: any) =>
+        prev.map((x: any) =>
+          x.id === result.id
+            ? { ...x, title: result.title, body: result.body }
+            : x
+        )
+      );
+      this.filtredTodos.set(this.todos());
+    }
   }
   updateField(text: string) {
     this.searchedText.set(text);

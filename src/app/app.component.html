@@ -1,9 +1,9 @@
 <router-outlet />
 <div class="relative">
-  <div
-    class="sticky !top-0 left-0 w-full right-0 z-10 bg-white m-auto lg:flex lg:flex-row lg:justify-between lg:items-baseline"
+  <header
+    class="sticky !top-0 w-full z-10 bg-white m-auto lg:flex lg:flex-row lg:justify-between lg:items-baseline lg:w-11/12"
   >
-    <div class="w-10/12 inline-block lg:w-1/4 ml-9">
+    <div class="w-10/12 inline-block lg:w-1/4">
       <mat-form-field class="mt-4 w-full">
         <mat-label>Search</mat-label>
         <input
@@ -13,7 +13,16 @@
         />
       </mat-form-field>
     </div>
-    <div class="flex justify-between px-8 pb-3 items-center mb-6 lg:gap-28">
+    <div class="flex justify-evenly gap-1 pb-3 items-center mb-6 lg:gap-28">
+      <button
+        (click)="deleteAll()"
+        class="!bg-red-500 !text-white !text-xs sm:!text-base"
+        [style.display]="isChecked() ? 'block' : 'none'"
+        mat-flat-button
+      >
+        <mat-icon class="material-icons-outlined">delete</mat-icon>
+        Delete
+      </button>
       <button
         (click)="openDialog(null)"
         class="!bg-green-500 !text-white !text-xs sm:!text-base"
@@ -23,24 +32,16 @@
         Add
       </button>
       <button
-        (click)="deleteAll()"
-        class="!bg-red-500 !text-white !text-xs sm:!text-base"
-        mat-flat-button
-      >
-        <mat-icon class="material-icons-outlined">delete</mat-icon>
-        Delete
-      </button>
-      <button
         (click)="selectAll()"
         class="!bg-blue-400 !text-white !text-xs sm:!text-base"
-        [style.visibility]="isChecked() ? 'visible' : 'hidden'"
+        [style.display]="isChecked() ? 'block' : 'none'"
         mat-flat-button
       >
         Select All
       </button>
     </div>
-  </div>
-  <form class=" ">
+  </header>
+  <form>
     <div class="flex flex-col items-center justify-center">
       <!-- search box and buttons -->
 
@@ -48,7 +49,7 @@
       @if (filtredTodos().length == 0) {
       <app-empty-box />
       } @else{
-      <div class="flex flex-col w-full gap-3">
+      <div class="flex flex-col w-full gap-3 mb-3">
         @for (item of filtredTodos().slice().reverse(); track $index) {
 
         <div
