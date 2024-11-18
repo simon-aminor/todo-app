@@ -24,9 +24,7 @@ import { AppService } from './app.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TodoAddFormComponent } from './components/todo-add-form/todo-add-form.component';
 import { MatDialog } from '@angular/material/dialog';
-import { log } from 'console';
 import { Todo } from './types/todo';
-import { NgStyle } from '@angular/common';
 import { DeleteWarningPopupComponent } from './components/delete-warning-popup/delete-warning-popup.component';
 
 @Component({
@@ -41,7 +39,6 @@ import { DeleteWarningPopupComponent } from './components/delete-warning-popup/d
     MatDividerModule,
     MatIconModule,
     MatListModule,
-    TodoAddFormComponent,
     MatCheckboxModule,
     EmptyBoxComponent,
   ],
@@ -55,47 +52,33 @@ export class AppComponent {
   deleteConfrimation = signal<boolean>(false);
   isChecked = signal<boolean>(false);
   searchedText = signal('');
-  readonly dialog = inject(MatDialog);
 
+  readonly dialog = inject(MatDialog);
   private appService = inject(AppService);
+
   ngOnInit(): void {
     this.fetchData(); //fetch data at first render
   }
   ngDoCheck(): void {
-    this.updateField(this.searchedText());
-    this.handleCheckBoxChange();
+    this.updateField(this.searchedText()); // when s.t changes it rerenders filters
+    this.handleCheckBoxChange(); // selectAll button check when change detected
   }
 
   openDialog(item: any): void {
     const dialogRef = this.dialog.open(TodoAddFormComponent, { data: item });
     // open and after close dialog
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // when somthing writen in add dialog this scope addes
-        this.todos.update((prev: any) =>
-          prev.map((x: any) =>
-            x.id === result.id
-              ? { ...x, title: result.title, body: result.body }
-              : x
-          )
-        );
-
-        this.filtredTodos.set(this.todos());
-      } else {
-        return;
-      }
-      console.log('The dialog was closed');
-      if (item) {
-        this.editItem(item, result);
-      } else {
+      // choose to edit or add result
+      if (item && result) {
+        this.editItem(result);
+      } else if (result) {
         this.add(result);
       }
     });
   }
   add(result: any) {
+    // add new todo with dialog results
     if (result.title && result.body) {
-      console.log(result);
-
       const random = Math.random();
       result.id = random;
       result.checked = false;
@@ -104,6 +87,7 @@ export class AppComponent {
     }
   }
   async openWarningDialog() {
+    // open confrimation dialog
     const dialogRef = this.dialog.open(DeleteWarningPopupComponent);
 
     return new Promise((resolve) => {
@@ -120,17 +104,17 @@ export class AppComponent {
     });
   }
   async deleteAll() {
+    // delete all checked Todos
     await this.openWarningDialog();
     if (this.deleteConfrimation()) {
       console.log('deleted');
       this.todos.update((prev) => prev.filter((e) => !e.checked));
       this.filtredTodos.set(this.todos());
       this.ngDoCheck();
-    } else {
-      return;
     }
   }
   async deleteItem(id: any) {
+    // delete targeted Todo from data
     await this.openWarningDialog();
     if (this.deleteConfrimation()) {
       this.todos.update((prev) => prev.filter((e) => e.id !== id));
@@ -138,15 +122,18 @@ export class AppComponent {
       this.ngDoCheck();
     }
   }
-  editItem(item: any, result: any) {
-    console.log(result);
+  editItem(result: any) {
+    // edit selected todo with changes writen in dialog
 
-    this.filtredTodos().filter((state) => {
-      if (state.id == item.id) {
-        const index = this.filtredTodos().indexOf(state);
-        this.filtredTodos()[index];
-      }
-    });
+    this.todos.update((prev: any) =>
+      prev.map((x: any) =>
+        x.id === result.id
+          ? { ...x, title: result.title, body: result.body }
+          : x
+      )
+    );
+
+    this.filtredTodos.set(this.todos());
   }
   updateField(text: string) {
     this.searchedText.set(text);
@@ -157,7 +144,6 @@ export class AppComponent {
         return;
       }
     });
-
     this.freshData(a);
   }
   freshData(a?: any) {
@@ -169,6 +155,7 @@ export class AppComponent {
     }
   }
   fetchData() {
+    // get todo data from api
     this.appService.getPosts().subscribe({
       next: async (res: any) => {
         await res?.forEach((el: any) => (el.checked = false));
@@ -181,6 +168,7 @@ export class AppComponent {
     });
   }
   selectAll() {
+    // turns all todos checked to true
     this.todos.update((prev: any) =>
       prev.map((x: any) => ({ ...x, checked: true }))
     );
@@ -188,6 +176,7 @@ export class AppComponent {
     this.filtredTodos.set(this.todos());
   }
   handleCheckBoxChange(item?: any) {
+    // if a card is checked it shows select all button
     this.isChecked.set(Boolean(this.todos().filter((c) => c.checked).length));
   }
 }
