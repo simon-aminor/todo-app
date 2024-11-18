@@ -55,7 +55,6 @@ export class AppComponent {
   deleteConfrimation = signal<boolean>(false);
   isChecked = signal<boolean>(false);
   searchedText = signal('');
-  // @ViewChild('selectAllButton') selectAllButton!: ElementRef;
   readonly dialog = inject(MatDialog);
 
   private appService = inject(AppService);
@@ -65,13 +64,6 @@ export class AppComponent {
   ngDoCheck(): void {
     this.updateField(this.searchedText());
     this.handleCheckBoxChange();
-    // console.log(this.selectAllButton);
-
-    // if (this.isChecked()) {
-    //   this.selectAllButton.nativeElement.style.visibility = 'hidden';
-    // } else {
-    //   this.selectAllButton.nativeElement.style.visibility = 'visible';
-    // }
   }
 
   openDialog(item: any): void {
@@ -101,7 +93,9 @@ export class AppComponent {
     });
   }
   add(result: any) {
-    if (result !== undefined) {
+    if (result.title && result.body) {
+      console.log(result);
+
       const random = Math.random();
       result.id = random;
       result.checked = false;
@@ -131,6 +125,7 @@ export class AppComponent {
       console.log('deleted');
       this.todos.update((prev) => prev.filter((e) => !e.checked));
       this.filtredTodos.set(this.todos());
+      this.ngDoCheck();
     } else {
       return;
     }
@@ -140,6 +135,7 @@ export class AppComponent {
     if (this.deleteConfrimation()) {
       this.todos.update((prev) => prev.filter((e) => e.id !== id));
       this.filtredTodos.set(this.todos());
+      this.ngDoCheck();
     }
   }
   editItem(item: any, result: any) {
@@ -191,7 +187,6 @@ export class AppComponent {
 
     this.filtredTodos.set(this.todos());
   }
-
   handleCheckBoxChange(item?: any) {
     this.isChecked.set(Boolean(this.todos().filter((c) => c.checked).length));
   }
