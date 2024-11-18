@@ -1,15 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
-  effect,
-  ElementRef,
   inject,
-  model,
-  Signal,
   signal,
-  ViewChild,
-  viewChild,
 } from '@angular/core';
 import { EmptyBoxComponent } from './components/empty-box/empty-box.component';
 import { RouterOutlet } from '@angular/router';

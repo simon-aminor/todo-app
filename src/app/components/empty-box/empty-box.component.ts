@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './empty-box.component.html',
-  styleUrl: './empty-box.component.scss'
+  styleUrl: './empty-box.component.scss',
 })
-export class EmptyBoxComponent {
-
-}
+export class EmptyBoxComponent {}
